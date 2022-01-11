@@ -11,15 +11,17 @@ import com.csdn.coupon.customer.dao.entity.Coupon;
 import com.csdn.coupon.customer.service.CouponCustomerService;
 import com.csdn.coupon.template.api.beans.CouponInfo;
 import com.csdn.coupon.template.api.beans.CouponTemplateInfo;
-import com.csdn.coupon.template.service.CouponTemplateService;
+//import com.csdn.coupon.template.service.CouponTemplateService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.reactive.function.client.WebClient;
 
 /**
  * @Author: xiewenfeng
@@ -32,8 +34,10 @@ public class CouponCustomerImpl implements CouponCustomerService {
   @Autowired
   private CouponDao couponDao;
 
+  //  @Autowired
+//  private CouponTemplateService templateService;
   @Autowired
-  private CouponTemplateService templateService;
+  private WebClient.Builder webClientBuilder;
 
   @Override
   public Coupon requestCoupon(RequestCoupon request) {
@@ -69,7 +73,11 @@ public class CouponCustomerImpl implements CouponCustomerService {
 
     List<Long> templateIds = coupons.stream().map(Coupon::getTemplateId).collect(toList());
 
-    Map<Long, CouponTemplateInfo> templateInfoMap = templateService.getTemplateInfoMap(templateIds);
+//    Map<Long, CouponTemplateInfo> templateInfoMap = templateService.getTemplateInfoMap(templateIds);
+    Map<Long, CouponTemplateInfo> templateInfoMap = webClientBuilder.build().get()
+        .uri("http://coupon-template-serv/template/getBatch?ids=" + templateIds).retrieve()
+        .bodyToMono(new ParameterizedTypeReference<Map<Long, CouponTemplateInfo>>() {
+        }).block();
 
     coupons.forEach(coupon -> {
       coupon.setTemplateInfo(templateInfoMap.get(coupon.getTemplateId()));
