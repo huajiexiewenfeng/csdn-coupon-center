@@ -8,6 +8,7 @@ import com.csdn.coupon.customer.api.enums.CouponStatus;
 import com.csdn.coupon.customer.converter.CouponConverter;
 import com.csdn.coupon.customer.dao.CouponDao;
 import com.csdn.coupon.customer.dao.entity.Coupon;
+import com.csdn.coupon.customer.feign.TemplateService;
 import com.csdn.coupon.customer.service.CouponCustomerService;
 import com.csdn.coupon.template.api.beans.CouponInfo;
 import com.csdn.coupon.template.api.beans.CouponTemplateInfo;
@@ -34,8 +35,9 @@ public class CouponCustomerImpl implements CouponCustomerService {
   @Autowired
   private CouponDao couponDao;
 
-  //  @Autowired
-//  private CouponTemplateService templateService;
+  @Autowired
+  private TemplateService templateService;
+
   @Autowired
   private WebClient.Builder webClientBuilder;
 
@@ -74,10 +76,11 @@ public class CouponCustomerImpl implements CouponCustomerService {
     List<Long> templateIds = coupons.stream().map(Coupon::getTemplateId).collect(toList());
 
 //    Map<Long, CouponTemplateInfo> templateInfoMap = templateService.getTemplateInfoMap(templateIds);
-    Map<Long, CouponTemplateInfo> templateInfoMap = webClientBuilder.build().get()
-        .uri("http://coupon-template-serv/template/getBatch?ids=" + templateIds).retrieve()
-        .bodyToMono(new ParameterizedTypeReference<Map<Long, CouponTemplateInfo>>() {
-        }).block();
+//    Map<Long, CouponTemplateInfo> templateInfoMap = webClientBuilder.build().get()
+//        .uri("http://coupon-template-serv/template/getBatch?ids=" + templateIds).retrieve()
+//        .bodyToMono(new ParameterizedTypeReference<Map<Long, CouponTemplateInfo>>() {
+//        }).block();
+    Map<Long, CouponTemplateInfo> templateInfoMap = templateService.getTemplateInBatch(templateIds);
 
     coupons.forEach(coupon -> {
       coupon.setTemplateInfo(templateInfoMap.get(coupon.getTemplateId()));

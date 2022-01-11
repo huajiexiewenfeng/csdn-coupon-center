@@ -25,6 +25,27 @@
       <artifactId>spring-cloud-starter-loadbalancer</artifactId>
     </dependency>
 
+    <!-- openfeign组件 -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-openfeign</artifactId>
+    </dependency>
+
+    <!-- hystrix组件，专门用来演示openfeign降级 -->
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+      <version>2.2.10.RELEASE</version>
+      <exclusions>
+        <!-- 移除Ribbon负载均衡器 -->
+        <exclusion>
+          <groupId>org.springframework.cloud</groupId>
+          <artifactId>spring-cloud-netflix-ribbon</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+
     <!-- 响应式编程的Webflux组件，提供了异步化的非阻塞功能 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -53,22 +74,12 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>org.example</groupId>-->
-<!--      <artifactId>coupon-template-impl</artifactId>-->
-<!--      <version>1.0-SNAPSHOT</version>-->
-<!--    </dependency>-->
 
-
-    <!--        <dependency>-->
-    <!--            <groupId>${project.groupId}</groupId>-->
-    <!--            <artifactId>coupon-template-api</artifactId>-->
-    <!--            <version>${project.version}</version>-->
-    <!--        </dependency>-->
   </dependencies>
 
 </project>
