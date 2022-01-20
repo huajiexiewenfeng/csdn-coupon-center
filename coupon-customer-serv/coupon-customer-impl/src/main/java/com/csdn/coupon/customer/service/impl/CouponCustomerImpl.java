@@ -43,7 +43,7 @@ public class CouponCustomerImpl implements CouponCustomerService {
 
   @Override
   public Coupon requestCoupon(RequestCoupon request) {
-
+    log.info("暂无实现");
     return null;
   }
 

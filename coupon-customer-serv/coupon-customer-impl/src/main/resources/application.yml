@@ -7,22 +7,22 @@ server:
 spring:
   application:
     name: coupon-customer-serv
-  datasource:
-    # mysql数据源
-    username: root
-    password: 123456
-    url: jdbc:mysql://127.0.0.1:3306/csdn_coupon_db?autoReconnect=true&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC
-    type: com.zaxxer.hikari.HikariDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    # 连接池
-    hikari:
-      pool-name: CsdnCouponHikari
-      connection-timeout: 5000
-      idle-timeout: 30000
-      maximum-pool-size: 10
-      minimum-idle: 5
-      max-lifetime: 60000
-      auto-commit: true
+#  datasource:
+#    # mysql数据源
+#    username: root
+#    password: 123456
+#    url: jdbc:mysql://127.0.0.1:3306/csdn_coupon_db?autoReconnect=true&useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC
+#    type: com.zaxxer.hikari.HikariDataSource
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    # 连接池
+#    hikari:
+#      pool-name: CsdnCouponHikari
+#      connection-timeout: 5000
+#      idle-timeout: 30000
+#      maximum-pool-size: 10
+#      minimum-idle: 5
+#      max-lifetime: 60000
+#      auto-commit: true
   jpa:
     show-sql: true
     hibernate:
@@ -70,4 +70,17 @@ spring:
 logging:
   level:
     com.broadview.coupon: debug
+    com.geekbang.coupon.customer.feign.TemplateService: debug
+    com.geekbang.coupon.customer.feign.CalculationService: debug
 
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 1000
+        readTimeout: 2000
+      coupon-template-serv:
+        connectTimeout: 1000
+        readTimeout: 1500
+  circuitbreaker:
+    enabled: true

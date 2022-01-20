@@ -21,4 +21,5 @@ public class TemplateServiceFallbackFactory implements FallbackFactory<TemplateS
       return Maps.newHashMap();
     };
   }
+
 }
