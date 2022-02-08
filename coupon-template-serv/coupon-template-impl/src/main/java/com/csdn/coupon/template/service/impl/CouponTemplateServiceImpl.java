@@ -11,6 +11,7 @@ import com.csdn.coupon.template.service.CouponTemplateService;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -84,6 +85,13 @@ public class CouponTemplateServiceImpl implements CouponTemplateService {
 
     return templates.stream().map(CouponTemplateConverter::convertToTemplateInfo)
         .collect(Collectors.toMap(CouponTemplateInfo::getId, Function.identity()));
+  }
+
+  @Override
+  public CouponTemplateInfo getTemplateInfo(Long id) {
+    Optional<CouponTemplate> template = templateDao.findById(id);
+    return template.isPresent() ? CouponTemplateConverter.convertToTemplateInfo(template.get())
+        : null;
   }
 
 }

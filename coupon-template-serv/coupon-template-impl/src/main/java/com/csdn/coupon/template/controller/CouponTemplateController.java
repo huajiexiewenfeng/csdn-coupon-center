@@ -1,9 +1,11 @@
 package com.csdn.coupon.template.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.csdn.coupon.template.api.beans.CouponTemplateInfo;
 import com.csdn.coupon.template.api.beans.PagedCouponTemplateInfo;
 import com.csdn.coupon.template.api.beans.TemplateSearchParams;
 import com.csdn.coupon.template.service.CouponTemplateService;
+import com.google.common.collect.Maps;
 import java.util.Collection;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -38,10 +40,36 @@ public class CouponTemplateController {
     return couponTemplateService.search(request);
   }
 
+  @GetMapping("/getTemplate")
+  @SentinelResource(value = "getTemplate")
+  public CouponTemplateInfo getTemplate(@RequestParam("id") Long id) {
+    log.info("Load template, id={}", id);
+    return couponTemplateService.getTemplateInfo(id);
+  }
+
+  /**
+   * <p>你也可以通过defaultFallback属性做一个全局限流、降级的处理逻辑 <p/>
+   * 如果你不想将降级方法写在当前类里，可以通过blockHandlerClass和fallbackClass指定"降级类"
+   *
+   * @param ids
+   * @return
+   */
   @GetMapping("/getBatch")
-  public Map<Long, CouponTemplateInfo> getTemplateInBatch(@RequestParam("ids") Collection<Long> ids) {
+  @SentinelResource(value = "getTemplateInBatch", fallback = "getTemplateInBatchFallback", blockHandler = "getTemplateInBatchBlock")
+  public Map<Long, CouponTemplateInfo> getTemplateInBatch(
+      @RequestParam("ids") Collection<Long> ids) {
     log.info("getTemplateInBatch: {}", ids);
     return couponTemplateService.getTemplateInfoMap(ids);
+  }
+
+  public Map<Long, CouponTemplateInfo> getTemplateInBatchFallback(Collection<Long> ids) {
+    log.info("接口降级");
+    return Maps.newHashMap();
+  }
+
+  public Map<Long, CouponTemplateInfo> getTemplateInBatchBlock(Collection<Long> ids) {
+    log.info("接口限流");
+    return Maps.newHashMap();
   }
 
 }

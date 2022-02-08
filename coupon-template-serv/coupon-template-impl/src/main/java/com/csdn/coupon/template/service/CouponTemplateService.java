@@ -17,4 +17,6 @@ public interface CouponTemplateService {
   PagedCouponTemplateInfo search(TemplateSearchParams request);
 
   Map<Long, CouponTemplateInfo> getTemplateInfoMap(Collection<Long> ids);
+
+  CouponTemplateInfo getTemplateInfo(Long id);
 }
