@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: coupon-gateway
+  cloud:
+    nacos:
+      config:
+        server-addr: 10.122.101.38:8848
+        file-extension: yml
+        namespace: dev
+        group: myGroup
+        timeout: 5000
+        config-long-poll-timeout: 1000
+        config-retry-time: 100000
+        max-retry: 3
+        refresh-enabled: true
+        enable-remote-sync-config: true
